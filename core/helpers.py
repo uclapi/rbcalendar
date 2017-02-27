@@ -6,7 +6,7 @@ import os
 
 def fetch_and_cache_data(
     api_arguments,
-    uuid
+    hash
 ):
     token = os.environ["UCLAPI_TOKEN"]
 
@@ -52,14 +52,14 @@ def fetch_and_cache_data(
 
     querycache = conn.hgetall("querycache")
 
-    querycache[uuid] = json.dumps(bookings)
+    querycache[hash] = json.dumps(bookings)
 
     conn.hmset("querycache", querycache)
 
 
-def get_api_arguments_from_db(uuid):
+def get_api_arguments_from_db(hash):
     from core.models import Query
-    query = Query.objects.get(uuid=uuid)
+    query = Query.objects.get(hash=hash)
 
     roomid = query.roomid
     start_datetime = query.start_datetime

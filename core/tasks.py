@@ -28,12 +28,12 @@ def fetch_and_cache_task():
         }
         query.last_started = timezone.now()
         query.save()
-        commence_fetch_and_cache(api_arguments, query.uuid)
+        commence_fetch_and_cache(api_arguments, query.hash)
 
 
 @shared_task
-def commence_fetch_and_cache(api_arguments, uuid):
-    fetch_and_cache_data(api_arguments, uuid)
+def commence_fetch_and_cache(api_arguments, hash):
+    fetch_and_cache_data(api_arguments, hash)
 
 
 @shared_task

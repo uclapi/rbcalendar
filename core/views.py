@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django_cal.views import Events
 import os
 import redis
@@ -8,6 +10,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from core.models import Query
 from django.utils import timezone
 import helpers
+import hashlib
 
 
 def index(request):
@@ -23,6 +26,15 @@ def new_query(request):
         siteid = request.GET["siteid"]
         description = request.GET["description"]
         contact = request.GET["contact"]
+        hash = hashlib.sha256("{}{}{}{}{}{}{}".format(
+                roomid,
+                start_datetime,
+                end_datetime,
+                date,
+                siteid,
+                description,
+                contact
+            ).encode("utf8")).hexdigest()
     except KeyError:
         return HttpResponseBadRequest(
             "invalid/insufficient query params supplied"
@@ -35,25 +47,26 @@ def new_query(request):
         siteid=siteid,
         description=description,
         contact=contact,
-        last_started=timezone.now()
+        last_started=timezone.now(),
+        hash=hash
     )
     new_query.save()
-    api_arguments = helpers.get_api_arguments_from_db(new_query.uuid)
-    helpers.fetch_and_cache_data(api_arguments, new_query.uuid)
+    api_arguments = helpers.get_api_arguments_from_db(new_query.hash)
+    helpers.fetch_and_cache_data(api_arguments, new_query.hash)
 
     return JsonResponse({
         "ok": True,
         "calendar_url": "http://{}/c/{}/events.ics".format(
             request.get_host(),
-            new_query.uuid
+            new_query.hash
         )
     })
 
 
 class Bookings(Events):
     def get_object(self, *args, **kwargs):
-        self.uuid = kwargs["uuid"]
-        query = Query.objects.get(uuid=self.uuid)
+        self.hash = kwargs["hash"]
+        query = Query.objects.get(hash=self.hash)
         query.last_accessed = timezone.now()
         query.save()
 
@@ -64,7 +77,7 @@ class Bookings(Events):
 
         querycache = conn.hgetall("querycache")
 
-        contact_data = json.loads(querycache[self.uuid])
+        contact_data = json.loads(querycache[self.hash])
         return contact_data
 
     def cal_name(self):

@@ -17,7 +17,7 @@ from django.conf.urls import url
 from core import views
 
 urlpatterns = [
-    url(r'^c/(?P<uuid>[a-z0-9-]+)/events.ics$', views.Bookings()),
+    url(r'^c/(?P<hash>[a-z0-9-]+)/events.ics$', views.Bookings()),
     url(r'^$', views.index),
     url(r'^new_query/$', views.new_query)
 ]
