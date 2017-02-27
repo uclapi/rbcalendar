@@ -28,9 +28,9 @@ def fetch_and_cache_data(
     bookings = resp["bookings"]
 
     next_page = resp["next_page_exists"]
-    page_token = resp["page_token"]
     counter = 0
     while next_page:
+        page_token = resp["page_token"]
         params = {
             "token": token,
             "page_token": page_token
@@ -43,7 +43,6 @@ def fetch_and_cache_data(
         bookings += pagination_resp["bookings"]
         if pagination_resp["next_page_exists"] and counter < 11:
             next_page = True
-            page_token = pagination_resp["page_token"]
             counter += 1
         else:
             next_page = False
