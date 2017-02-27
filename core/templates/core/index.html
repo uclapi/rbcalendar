@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- JQuery -->
+      <script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous">
+      </script>
+    <!-- materialize -->
+      <!-- Compiled and minified CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+     <!-- Compiled and minified JavaScript -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+  </head>
+  <body>
+    <div class="row">
+    <form class="col s12" id="create-calendar-form">
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="433" id="roomid" type="text" class="validate">
+          <label for="roomid">roomid</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input value="2017-03-06T03:36:45+00:00" id="start_datetime" type="text" class="validate" pattern="(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})[+-](\d{2})\:(\d{2})">
+          <label for="start_datetime">start_datetime</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input value="2017-04-06T03:36:45+00:00" id="end_datetime" type="text" class="validate" pattern="(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})[+-](\d{2})\:(\d{2})">
+          <label for="end_datetime">end_datetime</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="20160202" id="date" type="text" class="validate">
+          <label for="date">date</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="086" id="siteid" type="text" class="validate">
+          <label for="siteid">siteid</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="Lecture" id="description" type="text" class="validate">
+          <label for="description">description</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="Michael Arthur" id="contact" type="text" class="validate">
+          <label for="contact">contact</label>
+        </div>
+      </div>
+      <button id="generate-calendar-button" class="btn waves-effect waves-light" type="submit" name="action">Generate Calendar</button>
+    </form>
+    <br />
+    <br />
+    <div class="progress" style="display: none">
+      <div class="indeterminate"></div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function(){
+        $("#create-calendar-form").submit(function(e){
+            e.preventDefault();
+            $(".progress").css("display", "block");
+            $("#generate-calendar-button").addClass("disabled");
+            $.ajax({
+                type: "GET",
+                url: "/new_query/",
+                data: {
+                    "roomid": $("#roomid").val(),
+                    "start_datetime": $("#start_datetime").val(),
+                    "end_datetime": $("#end_datetime").val(),
+                    "date": $("#date").val(),
+                    "siteid": $("#siteid").val(),
+                    "description": $("#description").val(),
+                    "contact": $("#contact").val()
+                },
+                error: function(error) {
+                    console.log(error);
+                    $(".progress").css("display", "none");
+                    $("#generate-calendar-button").removeClass("disabled");
+                },
+                success: function(data) {
+                    console.log(data);
+                    console.log("done");
+                    $(".progress").css("display", "none");
+                    $("#generate-calendar-button").removeClass("disabled");
+                },
+            });
+        });
+    });
+  </script>
+
+  </body>
+</html>
