@@ -67,9 +67,16 @@
     <div class="progress" style="display: none">
       <div class="indeterminate"></div>
     </div>
+    <div id="success-modal" class="modal">
+      <div class="modal-content">
+        <p>Your calendar URL is: <span id="calendar-url"></span></p>
+        <p>Add this URL to your favorite calendar tool to load the calendar.</p>
+      </div>
+    </div>
   </div>
   <script>
     $(document).ready(function(){
+        $('#success-modal').modal();
         $("#create-calendar-form").submit(function(e){
             e.preventDefault();
             $(".progress").css("display", "block");
@@ -92,10 +99,11 @@
                     $("#generate-calendar-button").removeClass("disabled");
                 },
                 success: function(data) {
-                    console.log(data);
-                    console.log("done");
                     $(".progress").css("display", "none");
                     $("#generate-calendar-button").removeClass("disabled");
+                    $("#calendar-url").html(data.calendar_url);
+                    $('#success-modal').modal('open');
+
                 },
             });
         });
