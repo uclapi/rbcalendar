@@ -16,3 +16,4 @@ class Query(models.Model):
 
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     last_started = models.DateTimeField()
+    last_accessed = models.DateTimeField(blank=True)

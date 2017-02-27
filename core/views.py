@@ -53,6 +53,9 @@ def new_query(request):
 class Bookings(Events):
     def get_object(self, *args, **kwargs):
         self.uuid = kwargs["uuid"]
+        query = Query.objects.get(uuid=self.uuid)
+        query.last_accessed = timezone.now()
+        query.save()
 
     def items(self):
 
