@@ -1,5 +1,6 @@
+from __future__ import print_function, absolute_import, unicode_literals
 from celery import shared_task
-from helpers import fetch_and_cache_data
+from .helpers import fetch_and_cache_data
 from django.utils import timezone
 
 
@@ -8,7 +9,7 @@ def fetch_and_cache_task():
     from core.models import Query
 
     all_queries = Query.objects.all()
-    print len(all_queries)
+    print(len(all_queries))
     for query in all_queries:
         roomid = query.roomid
         start_datetime = query.start_datetime
@@ -38,7 +39,7 @@ def commence_fetch_and_cache(api_arguments, hash):
 
 @shared_task
 def test():
-    print "test"
+    print("test")
 
 
 @shared_task

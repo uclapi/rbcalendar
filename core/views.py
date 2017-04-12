@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
 from django_cal.views import Events
 import os
@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.http import HttpResponseBadRequest, JsonResponse
 from core.models import Query
 from django.utils import timezone
-import helpers
+from . import helpers
 import hashlib
 
 
@@ -77,7 +77,7 @@ class Bookings(Events):
 
         querycache = conn.hgetall("querycache")
 
-        contact_data = json.loads(querycache[self.hash])
+        contact_data = json.loads(querycache[self.hash.encode('ascii')])
         return contact_data
 
     def cal_name(self):
