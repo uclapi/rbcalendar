@@ -11,6 +11,7 @@ from core.models import Query
 from django.utils import timezone
 import helpers
 import hashlib
+import pytz
 
 
 def index(request):
@@ -92,10 +93,12 @@ class Bookings(Events):
         return item["description"]
 
     def item_start(self, item):
-        return ciso8601.parse_datetime(item["start_time"])
+        start = ciso8601.parse_datetime(item["start_time"])
+        return start.astimezone(pytz.utc)
 
     def item_end(self, item):
-        return ciso8601.parse_datetime(item["end_time"])
+        end = ciso8601.parse_datetime(item["end_time"])
+        return end.astimezone(pytz.utc)
 
     def item_location(self, item):
         return item["roomname"]
