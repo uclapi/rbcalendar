@@ -6,6 +6,7 @@ ciso8601==1.0.3
 click==6.7
 Django==1.10.5
 django-cal==0.2.3
+gunicorn==19.7.1
 kombu==4.0.2
 packaging==16.8
 psycopg2==2.6.2
