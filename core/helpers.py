@@ -12,7 +12,7 @@ def fetch_and_cache_data(
 
     params = {
         "token": token,
-        "results_per_page": "100"
+        "results_per_page": "1000"
     }
 
     for key in api_arguments:
